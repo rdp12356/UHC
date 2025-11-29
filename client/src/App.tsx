@@ -33,6 +33,7 @@ import CsvUpload from "@/pages/Asha/CsvUpload";
 import GovernmentDashboard from "@/pages/Government/Dashboard";
 import Alerts from "@/pages/Government/Alerts";
 import AdminPanel from "@/pages/Government/AdminPanel";
+import WardManagement from "@/pages/Government/WardManagement";
 
 function Router() {
   return (
@@ -94,6 +95,9 @@ function Router() {
         </Route>
         <Route path="/gov/admin">
           <ProtectedRoute component={AdminPanel} allowedRoles={['gov']} />
+        </Route>
+        <Route path="/gov/wards">
+          <ProtectedRoute component={WardManagement} allowedRoles={['gov']} />
         </Route>
 
         <Route component={NotFound} />
