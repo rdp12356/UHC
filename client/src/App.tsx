@@ -1,28 +1,94 @@
 import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/context/AuthContext";
+import Layout from "@/components/Layout";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+// Pages
+import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
+
+// Citizen Pages
+import CitizenDashboard from "@/pages/Citizen/Dashboard";
+import CitizenTimeline from "@/pages/Citizen/Timeline";
+import CitizenSchemes from "@/pages/Citizen/Schemes";
+
+// Doctor Pages
+import DoctorSearch from "@/pages/Doctor/Search";
+import PatientRecord from "@/pages/Doctor/PatientRecord";
+import AddNotes from "@/pages/Doctor/AddNotes";
+
+// ASHA Pages
+import HouseholdUpdates from "@/pages/Asha/HouseholdUpdates";
+import SubmitForm from "@/pages/Asha/SubmitForm";
+import CsvUpload from "@/pages/Asha/CsvUpload";
+
+// Gov Pages
+import GovernmentDashboard from "@/pages/Government/Dashboard";
+import Alerts from "@/pages/Government/Alerts";
 
 function Router() {
   return (
-    <Switch>
-      {/* Add pages below */}
-      {/* <Route path="/" component={Home}/> */}
-      {/* Fallback to 404 */}
-      <Route component={NotFound} />
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route path="/" component={Home} />
+        
+        {/* Citizen Routes */}
+        <Route path="/citizen/dashboard">
+          <ProtectedRoute component={CitizenDashboard} allowedRoles={['citizen']} />
+        </Route>
+        <Route path="/citizen/timeline">
+          <ProtectedRoute component={CitizenTimeline} allowedRoles={['citizen']} />
+        </Route>
+        <Route path="/citizen/schemes">
+          <ProtectedRoute component={CitizenSchemes} allowedRoles={['citizen']} />
+        </Route>
+
+        {/* Doctor Routes */}
+        <Route path="/doctor/search">
+          <ProtectedRoute component={DoctorSearch} allowedRoles={['doctor']} />
+        </Route>
+        <Route path="/doctor/record">
+          <ProtectedRoute component={PatientRecord} allowedRoles={['doctor']} />
+        </Route>
+        <Route path="/doctor/add-notes">
+          <ProtectedRoute component={AddNotes} allowedRoles={['doctor']} />
+        </Route>
+
+        {/* ASHA Routes */}
+        <Route path="/asha/households">
+          <ProtectedRoute component={HouseholdUpdates} allowedRoles={['asha']} />
+        </Route>
+        <Route path="/asha/submit">
+          <ProtectedRoute component={SubmitForm} allowedRoles={['asha']} />
+        </Route>
+        <Route path="/asha/upload">
+          <ProtectedRoute component={CsvUpload} allowedRoles={['asha']} />
+        </Route>
+
+        {/* Government Routes */}
+        <Route path="/gov/dashboard">
+          <ProtectedRoute component={GovernmentDashboard} allowedRoles={['gov']} />
+        </Route>
+        <Route path="/gov/alerts">
+          <ProtectedRoute component={Alerts} allowedRoles={['gov']} />
+        </Route>
+
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
   );
 }
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
+      <AuthProvider>
         <Router />
-      </TooltipProvider>
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
