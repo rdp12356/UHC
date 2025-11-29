@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Syringe, Stethoscope, FileText } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "wouter";
 
 export default function CitizenTimeline() {
   const { user } = useAuth();
@@ -88,7 +89,9 @@ export default function CitizenTimeline() {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground" data-testid={`timeline-details-${index}`}>{event.details}</p>
+                <Link href={`/citizen/member/${event.memberId}`}>
+                  <p className="text-muted-foreground hover:text-blue-600 hover:underline cursor-pointer" data-testid={`timeline-details-${index}`}>{event.details}</p>
+                </Link>
               </CardContent>
             </Card>
           </div>

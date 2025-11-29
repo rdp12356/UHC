@@ -150,27 +150,29 @@ export default function CitizenDashboard() {
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {members.map((member) => (
-                <div key={member.id} className="border rounded-lg p-4 space-y-2" data-testid={`member-card-${member.id}`}>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-medium" data-testid={`text-member-name-${member.id}`}>{member.name}</h4>
-                      <p className="text-sm text-muted-foreground">Age: {member.age} | {member.relation}</p>
+                <Link key={member.id} href={`/citizen/member/${member.id}`}>
+                  <div className="border rounded-lg p-4 space-y-2 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer" data-testid={`member-card-${member.id}`}>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-medium text-blue-600 hover:text-blue-700 hover:underline" data-testid={`text-member-name-${member.id}`}>{member.name}</h4>
+                        <p className="text-sm text-muted-foreground">Age: {member.age} | {member.relation}</p>
+                      </div>
+                      <Badge variant={member.vaccinations?.length > 0 ? "default" : "outline"} className={member.vaccinations?.length > 0 ? "bg-emerald-500" : ""}>
+                        {member.vaccinations?.length || 0} vaccines
+                      </Badge>
                     </div>
-                    <Badge variant={member.vaccinations?.length > 0 ? "default" : "outline"} className={member.vaccinations?.length > 0 ? "bg-emerald-500" : ""}>
-                      {member.vaccinations?.length || 0} vaccines
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      {member.vaccinations?.slice(0, 3).map((v) => (
+                        <span key={v.id} className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs">
+                          {v.vaccine_name}
+                        </span>
+                      ))}
+                      {member.vaccinations?.length > 3 && (
+                        <span className="px-2 py-0.5 text-xs text-muted-foreground">+{member.vaccinations.length - 3} more</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {member.vaccinations?.slice(0, 3).map((v) => (
-                      <span key={v.id} className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs">
-                        {v.vaccine_name}
-                      </span>
-                    ))}
-                    {member.vaccinations?.length > 3 && (
-                      <span className="px-2 py-0.5 text-xs text-muted-foreground">+{member.vaccinations.length - 3} more</span>
-                    )}
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

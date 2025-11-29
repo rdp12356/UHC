@@ -14,6 +14,7 @@ import NotFound from "@/pages/not-found";
 import CitizenDashboard from "@/pages/Citizen/Dashboard";
 import CitizenTimeline from "@/pages/Citizen/Timeline";
 import CitizenSchemes from "@/pages/Citizen/Schemes";
+import MemberDetail from "@/pages/Citizen/MemberDetail";
 
 // Doctor Pages
 import DoctorSearch from "@/pages/Doctor/Search";
@@ -48,6 +49,9 @@ function Router() {
         </Route>
         <Route path="/citizen/schemes">
           <ProtectedRoute component={CitizenSchemes} allowedRoles={['citizen']} />
+        </Route>
+        <Route path="/citizen/member/:memberId">
+          <ProtectedRoute component={MemberDetail} allowedRoles={['citizen']} />
         </Route>
 
         {/* Doctor Routes */}
