@@ -17,8 +17,13 @@ export default function DoctorSearch() {
     if (!query.trim()) return;
     
     setLoading(true);
-    const data = await api.searchPatient(query);
-    setResults(data);
+    try {
+      const data = await api.searchPatient(query);
+      setResults(data || []);
+    } catch (err) {
+      console.error('Search failed:', err);
+      setResults([]);
+    }
     setSearched(true);
     setLoading(false);
   };

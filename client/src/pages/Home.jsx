@@ -25,7 +25,7 @@ export default function Home() {
     e.preventDefault();
     setIsLoading(true);
     const creds = demoCredentials[role];
-    await login(creds.email, creds.pass);
+    await login(creds.email, role);
     setIsLoading(false);
   };
 

@@ -13,11 +13,23 @@ export default function CitizenTimeline() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (user?.id) {
-        const data = await api.getCitizenProfile(user.id);
-        if (data) setTimeline(data.timeline);
-        setLoading(false);
+      try {
+        const data = await api.getCitizenProfile('HH-12-0001');
+        if (data?.members) {
+          const events = data.members.flatMap(m =>
+            (m.vaccinations || []).map(v => ({
+              date: v.vaccination_date,
+              type: 'Vaccination',
+              title: v.vaccine_name,
+              details: `for ${m.name}`
+            }))
+          );
+          setTimeline(events);
+        }
+      } catch (err) {
+        console.error('Failed to fetch timeline:', err);
       }
+      setLoading(false);
     };
     fetchData();
   }, [user]);

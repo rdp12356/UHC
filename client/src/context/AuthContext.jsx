@@ -32,35 +32,49 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, role) => {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, role }),
+      });
+      
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: "Could not authenticate. Please try again.",
+        });
+        setLoading(false);
+        return false;
+      }
+      
+      const user = await response.json();
+      setUser(user);
+      
+      toast({
+        title: "Welcome back",
+        description: `Logged in as ${user.role.toUpperCase()}`,
+      });
+      
+      if (user.role === 'citizen') setLocation('/citizen/dashboard');
+      else if (user.role === 'doctor') setLocation('/doctor/search');
+      else if (user.role === 'asha') setLocation('/asha/households');
+      else if (user.role === 'gov') setLocation('/gov/dashboard');
+      
+      setLoading(false);
+      return true;
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: error.message,
+        description: err.message,
       });
       setLoading(false);
       return false;
     }
-    
-    setUser(data.user);
-    
-    // Redirect based on role
-    const role = data.user.role;
-    toast({
-      title: "Welcome back",
-      description: `Logged in as ${role.toUpperCase()}`,
-    });
-    
-    if (role === 'citizen') setLocation('/citizen/dashboard');
-    else if (role === 'doctor') setLocation('/doctor/search');
-    else if (role === 'asha') setLocation('/asha/households');
-    else if (role === 'gov') setLocation('/gov/dashboard');
-    
-    setLoading(false);
-    return true;
   };
 
   const logout = async () => {
