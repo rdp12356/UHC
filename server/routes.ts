@@ -128,6 +128,28 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/wards", async (req, res) => {
+    try {
+      const { ward_id, state, district, ward_name, ward_number, cleanliness_rate, vaccination_completion_rate } = req.body;
+      if (!ward_id || !state || !district || !ward_name || ward_number === undefined) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      const ward = await storage.createWard({
+        ward_id,
+        state,
+        district,
+        ward_name,
+        ward_number,
+        cleanliness_rate: cleanliness_rate || 75,
+        vaccination_completion_rate: vaccination_completion_rate || 70,
+      });
+      res.json(ward);
+    } catch (error) {
+      console.error("Create ward error:", error);
+      res.status(500).json({ error: "Failed to create ward" });
+    }
+  });
+
   // Household endpoints
   app.get("/api/households/all", async (req, res) => {
     try {

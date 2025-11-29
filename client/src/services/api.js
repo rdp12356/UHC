@@ -127,6 +127,71 @@ export const api = {
     return res.json();
   },
 
+  createWard: async (data) => {
+    const res = await fetch(`${API_BASE}/wards`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  getStates: async () => {
+    const states = [
+      { code: 'KL', name: 'Kerala' },
+      { code: 'MH', name: 'Maharashtra' },
+      { code: 'TN', name: 'Tamil Nadu' },
+      { code: 'GJ', name: 'Gujarat' },
+      { code: 'UP', name: 'Uttar Pradesh' },
+      { code: 'DL', name: 'Delhi' },
+    ];
+    return states;
+  },
+
+  getDistrictsByState: async (stateCode) => {
+    const districtMap = {
+      'KL': [
+        { code: 'ER', name: 'Ernakulam' },
+        { code: 'ID', name: 'Idukki' },
+        { code: 'KZ', name: 'Kottayam' },
+        { code: 'AL', name: 'Alappuzha' },
+        { code: 'PA', name: 'Pathanamthitta' },
+      ],
+      'MH': [
+        { code: 'MM', name: 'Mumbai' },
+        { code: 'PU', name: 'Pune' },
+        { code: 'NS', name: 'Nagpur' },
+      ],
+      'TN': [
+        { code: 'CH', name: 'Chennai' },
+        { code: 'CM', name: 'Coimbatore' },
+        { code: 'MD', name: 'Madurai' },
+      ],
+    };
+    return districtMap[stateCode] || [];
+  },
+
+  getWardsByDistrict: async (stateCode, districtCode) => {
+    const wardMap = {
+      'KL_ER': [
+        { number: 1, name: 'Ernakulam North' },
+        { number: 2, name: 'Ernakulam South' },
+        { number: 3, name: 'Ernakulam Central' },
+        { number: 4, name: 'Ernakulam East' },
+        { number: 5, name: 'Ernakulam West' },
+      ],
+      'KL_ID': [
+        { number: 1, name: 'Idukki North' },
+        { number: 2, name: 'Idukki South' },
+      ],
+      'MH_MM': [
+        { number: 1, name: 'Mumbai Ward 1' },
+        { number: 2, name: 'Mumbai Ward 2' },
+      ],
+    };
+    return wardMap[`${stateCode}_${districtCode}`] || [];
+  },
+
   // All households (for admin)
   getAllHouseholds: async () => {
     const res = await fetch(`${API_BASE}/households/all`);
