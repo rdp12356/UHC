@@ -44,6 +44,7 @@ export const households = pgTable("households", {
 
 export const members = pgTable("members", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  member_id: varchar("member_id").unique(),
   household_id: varchar("household_id").notNull().references(() => households.household_id),
   name: text("name").notNull(),
   age: integer("age").notNull(),

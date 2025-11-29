@@ -49,6 +49,7 @@ export default function WardMembers() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Member ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Age</TableHead>
                 <TableHead>Relation</TableHead>
@@ -66,6 +67,7 @@ export default function WardMembers() {
               ) : (
                 filtered.map((m) => (
                   <TableRow key={m.id} data-testid={`row-member-${m.id}`}>
+                    <TableCell className="font-mono text-xs" data-testid={`text-member-id-${m.id}`}>{m.member_id || "-"}</TableCell>
                     <TableCell className="font-medium" data-testid={`text-name-${m.id}`}>{m.name || "N/A"}</TableCell>
                     <TableCell>{m.age || "-"}</TableCell>
                     <TableCell>{m.relation || "-"}</TableCell>

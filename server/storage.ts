@@ -154,6 +154,15 @@ export class DrizzleStorage implements IStorage {
   }
 
   async createMember(member: any): Promise<Member> {
+    // Generate member_id if not provided
+    if (!member.member_id) {
+      const householdId = member.household_id;
+      const existingMembers = await db.select().from(members).where(eq(members.household_id, householdId));
+      const memberCount = existingMembers.length + 1;
+      const householdNumber = householdId.split('-')[2]; // Extract from HH-12-0001
+      member.member_id = `MEM-${householdNumber}-${String(memberCount).padStart(3, '0')}`;
+    }
+    
     const result = await db.insert(members).values(member).returning();
     return result[0];
   }

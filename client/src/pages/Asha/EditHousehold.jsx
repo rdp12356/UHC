@@ -228,6 +228,9 @@ export default function EditHousehold() {
                     <div>
                       <h4 className="font-medium">{member.name}</h4>
                       <p className="text-sm text-muted-foreground">Age: {member.age} | {member.relation}</p>
+                      {member.member_id && (
+                        <p className="text-xs text-slate-500 font-mono mt-1">ID: {member.member_id}</p>
+                      )}
                     </div>
                   </div>
                   
