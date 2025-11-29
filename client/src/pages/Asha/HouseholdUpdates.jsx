@@ -13,13 +13,16 @@ export default function HouseholdUpdates() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    api.getHouseholds().then(setHouseholds);
+    api.getHouseholds().then(data => setHouseholds(data || [])).catch(() => setHouseholds([]));
   }, []);
 
-  const filtered = households.filter(h => 
-    h.head.toLowerCase().includes(search.toLowerCase()) || 
-    h.address.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = (households || []).filter(h => {
+    if (!h) return false;
+    const head = (h.family_head || h.head || "").toLowerCase();
+    const addr = (h.address || "").toLowerCase();
+    const searchLower = (search || "").toLowerCase();
+    return head.includes(searchLower) || addr.includes(searchLower);
+  });
 
   return (
     <div className="space-y-6">
@@ -56,27 +59,27 @@ export default function HouseholdUpdates() {
             </TableHeader>
             <TableBody>
               {filtered.map((h) => (
-                <TableRow key={h.id}>
+                <TableRow key={h.household_id || h.id}>
                   <TableCell>
-                    <div className="font-medium">{h.head}</div>
+                    <div className="font-medium">{h.family_head || h.head || "N/A"}</div>
                     <div className="text-xs text-muted-foreground flex items-center gap-1">
-                      <MapPin className="h-3 w-3" /> {h.address}
+                      <MapPin className="h-3 w-3" /> {h.address || "Not specified"}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Users className="h-3 w-3 text-muted-foreground" />
-                      {h.members}
+                      {h.members || "-"}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={h.sanitation_status === 'Good' ? 'default' : 'destructive'} className={h.sanitation_status === 'Good' ? 'bg-emerald-500' : ''}>
-                      {h.sanitation_status}
+                    <Badge variant={h.cleanliness_score >= 80 ? 'default' : 'destructive'} className={h.cleanliness_score >= 80 ? 'bg-emerald-500' : ''}>
+                      {h.cleanliness_score >= 80 ? 'Good' : 'Pending'}
                     </Badge>
                   </TableCell>
-                  <TableCell>{h.last_visit}</TableCell>
+                  <TableCell>Today</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/asha/submit?id=${h.id}`}>
+                    <Link href={`/asha/submit?id=${h.household_id}`}>
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
