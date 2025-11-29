@@ -1,0 +1,141 @@
+You are an expert full-stack developer. Build a complete, working, production-quality web application called:
+
+   **UHC – Unique Health Code**
+
+Use the following stack inside Replit:
+- React (Vite + React 19)
+- Tailwind CSS
+- React Router v6
+- Recharts (for charts)
+- Supabase (database + auth)
+- Node.js for optional backend endpoints (if needed)
+
+---------------------------------------
+PROJECT REQUIREMENTS
+---------------------------------------
+
+## 1. FULL WEBSITE NAVIGATION (Must follow EXACT sitemap)
+Home
+ │
+ ├── Citizen Portal
+ │     ├── Dashboard
+ │     ├── Timeline
+ │     └── Eligible Schemes
+ │
+ ├── Doctor Portal
+ │     ├── Search Patients
+ │     ├── Patient Record
+ │     └── Add Notes / Diagnosis
+ │
+ ├── ASHA Worker Portal
+ │     ├── Household Updates
+ │     ├── Submit Form
+ │     └── CSV Upload
+ │
+ └── Government Portal
+       ├── Dashboard (Charts + Stats)
+       └── Alerts (epidemic + sanitation alerts)
+
+This full navigation must be implemented using React Router.
+
+---------------------------------------
+## 2. ROLE-BASED AUTH (Supabase)
+Implement login using Supabase Auth (email OTP / magic link).
+
+After login, detect user role from DB and redirect:
+
+- citizen → /citizen
+- doctor → /doctor
+- asha → /asha
+- gov → /gov
+
+Use a ProtectedRoute component to block unauthorized pages.
+
+---------------------------------------
+## 3. DATABASE SCHEMA (Supabase)
+Create or use the following:
+
+users(id, email, role, full_name)
+citizens(id, user_id, uhc_id, name, dob, gender, ward, income_category, timeline jsonb)
+doctors(id, user_id, name, reg_number, hospital, verified)
+asha_updates(id, household_id, uhc_id, asha_user_id, updated_at, note, vaccination, sanitation_ok)
+citizen_history(id, citizen_id, created_by, type, title, details, urgent)
+
+Create reusable DB helper functions using a file like:
+src/services/api.js
+
+---------------------------------------
+## 4. FULL UI IMPLEMENTATION (Tailwind)
+The UI MUST:
+- Look modern, clean, and professional
+- Use cards, tables, badges, modals
+- Have a consistent theme across all pages
+- Be mobile-responsive
+- Include smooth transitions/animations
+- Match competition-grade UI
+
+Pages:
+
+### Citizen:
+- Dashboard (shows UHC ID, next vaccinations)
+- Timeline (list of health events)
+- Eligible Schemes (based on income category)
+
+### Doctor:
+- Search Patients (by UHC or name)
+- Patient Record page (shows citizen info + history)
+- Add Notes/Diagnosis (updates citizen_history)
+
+### ASHA Worker:
+- Household Update Form
+- Vaccination & Sanitation updates
+- CSV Upload page (bulk data import)
+
+### Government:
+- Dashboard with charts (Recharts)
+- Alerts panel:
+  - sudden rise in cases
+  - sanitation pending
+  - vaccination gaps
+
+---------------------------------------
+## 5. CODE STRUCTURE (required)
+src/
+ ├── components/
+ │     ├── Navbar.jsx
+ │     ├── ProtectedRoute.jsx
+ │     └── UI components
+ ├── pages/
+ │     ├── Citizen/
+ │     ├── Doctor/
+ │     ├── ASHA/
+ │     ├── Government/
+ │     └── Home.jsx
+ ├── services/
+ │     ├── api.js
+ │     └── supabaseClient.js
+ └── main.jsx
+ └── App.jsx
+
+---------------------------------------
+## 6. OUTPUT FORMAT
+Produce:
+- Folder structure
+- All React components
+- All UI code
+- All Supabase calls
+- Working routing
+- Instructions to:
+  - install dependencies,
+  - start the dev server,
+  - set environment variables,
+  - deploy using Replit’s web server.
+
+---------------------------------------
+GOAL
+---------------------------------------
+Generate the COMPLETE WORKING CODE for the entire project,
+inside one Replit workspace, with ALL files fully implemented,
+and ensure every feature and function actually works.
+
+Return all code files, ready to paste into Replit.
