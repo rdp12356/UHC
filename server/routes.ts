@@ -78,6 +78,15 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/asha-workers/ward/:wardId", async (req, res) => {
+    try {
+      const workers = await storage.getAshaWorkersByWard(req.params.wardId);
+      res.json(workers || []);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get ward ASHA workers" });
+    }
+  });
+
   app.post("/api/asha-workers", async (req, res) => {
     try {
       const { name, phone, ward_id } = req.body;

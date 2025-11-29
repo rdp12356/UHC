@@ -1,0 +1,284 @@
+STATE: Kerala → District: Ernakulam → Ward 12 (Gandhi Nagar)
+
+Ward ID: WARD-KL-ER-12
+Ward Cleanliness Rate: 78%
+Ward Vaccination Completion: 91%
+
+👩‍⚕ ASHA Worker 1: Anitha K
+
+ASHA ID: ASHA-12-001
+Assigned Households: HH-12-0001, HH-12-0002, HH-12-0003
+
+🏡 HOUSEHOLD 1 — HH-12-0001
+
+Family Name: Kumar Family
+Cleanliness Score: 82%
+Vaccination Completion: 100%
+
+👨‍👩‍👧‍👦 Members
+1️⃣ Ramesh Kumar (Father)
+
+Age: 42
+
+Relation: Father
+
+Vaccinations:
+
+COVID Dose 1 – 2021-05-12
+
+COVID Dose 2 – 2021-08-15
+
+Flu 2024 – 2024-01-20
+
+2️⃣ Lakshmi Kumar (Mother)
+
+Age: 38
+
+Relation: Mother
+
+Vaccinations:
+
+COVID Dose 1 – 2021-06-02
+
+COVID Dose 2 – 2021-09-10
+
+Tetanus Booster – 2023-10-12
+
+3️⃣ Rahul Kumar
+
+Age: 12
+
+Relation: Son
+
+Vaccinations:
+
+DTP Booster – 2023-06-11
+
+MMR – 2018-04-19
+
+4️⃣ Riya Kumar
+
+Age: 7
+
+Relation: Daughter
+
+Vaccinations:
+
+Polio Oral – 2023-09-05
+
+MMR – 2022-03-10
+
+🏡 HOUSEHOLD 2 — HH-12-0002
+
+Family Name: Shaji Family
+Cleanliness Score: 74%
+Vaccination Completion: 80%
+
+Members
+1️⃣ Shaji
+
+Age: 48
+
+Relation: Father
+
+Vaccinations:
+
+COVID Dose 1 – 2021-04-20
+
+COVID Dose 2 – 2021-07-18
+
+2️⃣ Mary Shaji
+
+Age: 45
+
+Relation: Mother
+
+Vaccinations:
+
+COVID Dose 1 – 2021-05-10
+
+COVID Dose 2 – 2021-08-09
+
+Flu 2024 – 2024-02-01
+
+3️⃣ Joel Shaji
+
+Age: 19
+
+Relation: Son
+
+Vaccinations:
+
+COVID Dose 1 – 2021-09-02
+
+COVID Dose 2 – 2021-12-06
+
+4️⃣ Anna Shaji
+
+Age: 15
+
+Relation: Daughter
+
+Vaccinations:
+
+MMR – 2015-06-15
+
+DTP Booster – 2021-03-12
+
+5️⃣ Grandmother
+
+Age: 71
+
+Relation: Grandmother
+
+Vaccinations:
+
+One dose only (COVID) – 2021-03-10 ❗ Needs Dose 2
+
+🏡 HOUSEHOLD 3 — HH-12-0003
+
+Family Name: Fatima Family
+Cleanliness Score: 89%
+Vaccination Completion: 100%
+
+Members
+1️⃣ Fatima
+
+Age: 35
+
+Relation: Mother
+
+Vaccinations:
+
+Flu 2024 – 2024-01-22
+
+Hepatitis B – 2023-08-14
+
+2️⃣ Ahmed
+
+Age: 10
+
+Relation: Son
+
+Vaccinations:
+
+DTP – 2023-05-09
+
+Polio Oral – 2022-11-10
+
+3️⃣ Sara
+
+Age: 6
+
+Relation: Daughter
+
+Vaccinations:
+
+MMR – 2021-02-18
+
+Polio – 2022-03-10
+
+👩‍⚕ ASHA Worker 2: Lekha R
+
+ASHA ID: ASHA-12-002
+Assigned Households: HH-12-0004, HH-12-0005
+
+🏡 HOUSEHOLD 4 — HH-12-0004
+
+Family Name: Rajan Family
+Cleanliness Score: 70%
+Vaccination Completion: 83%
+
+Members
+1️⃣ Rajan
+
+Age: 50
+
+Relation: Father
+
+Vaccinations:
+
+COVID Dose 1 – 2021-05-12
+
+Missed Dose 2 ❗
+
+2️⃣ Divya Rajan
+
+Age: 46
+
+Relation: Mother
+
+Vaccinations:
+
+COVID Dose 1 – 2021-06-20
+
+COVID Dose 2 – 2021-09-28
+
+3️⃣ Rishi
+
+Age: 17
+
+Relation: Son
+
+Vaccinations:
+
+MMR – 2010-04-19
+
+DTP Booster – 2021-09-14
+
+4️⃣ Riya
+
+Age: 14
+
+Relation: Daughter
+
+Vaccinations:
+
+MMR – 2012-03-21
+
+5️⃣ Rahul
+
+Age: 12
+
+Relation: Son
+
+Vaccinations:
+
+DTP – 2022-12-11
+
+6️⃣ Grandfather
+
+Age: 70
+
+Vaccinations:
+
+Not vaccinated ❗
+
+🏡 HOUSEHOLD 5 — HH-12-0005
+
+Family Name: Sumi Family
+Cleanliness Score: 90%
+Vaccination Completion: 100%
+
+Members
+1️⃣ Sumi
+
+Age: 31
+
+Relation: Mother
+
+Vaccinations:
+
+COVID Complete – 2021-07-15 / 2021-10-14
+
+2️⃣ Arya
+
+Age: 5
+
+Relation: Daughter
+
+Vaccinations:
+
+Polio Oral – 2023-09-05
+
+MMR – 2021-10-02

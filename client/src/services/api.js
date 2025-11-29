@@ -91,6 +91,11 @@ export const api = {
     return res.json();
   },
 
+  getAshaWorkersByWard: async (wardId) => {
+    const res = await fetch(`${API_BASE}/asha-workers/ward/${wardId}`);
+    return res.json();
+  },
+
   createAshaWorker: async (data) => {
     const res = await fetch(`${API_BASE}/asha-workers`, {
       method: "POST",
