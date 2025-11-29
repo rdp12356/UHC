@@ -23,16 +23,19 @@ export default function CitizenTimeline() {
               title: v.vaccine_name,
               details: `for ${m.name}`
             }))
-          );
+          ).sort((a, b) => new Date(b.date) - new Date(a.date));
           setTimeline(events);
+        } else {
+          setTimeline([]);
         }
       } catch (err) {
         console.error('Failed to fetch timeline:', err);
+        setTimeline([]);
       }
       setLoading(false);
     };
     fetchData();
-  }, [user]);
+  }, []);
 
   const getIcon = (type) => {
     switch (type) {

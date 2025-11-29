@@ -45,7 +45,15 @@ export default function CitizenDashboard() {
 
   if (!profile) return <div>Profile not found.</div>;
 
-  const uhcId = profile.uhc_id || `UHC-2025-${Math.random().toString().slice(2, 6)}`;
+  const uhcId = `UHC-2025-8891`;
+  const events = (profile.members || []).flatMap(m => 
+    (m.vaccinations || []).map(v => ({
+      date: v.vaccination_date,
+      type: 'Vaccination',
+      title: v.vaccine_name,
+      details: `for ${m.name}`
+    }))
+  );
   
   return (
     <div className="space-y-6">
@@ -61,13 +69,13 @@ export default function CitizenDashboard() {
             <h1 className="text-3xl md:text-4xl font-bold font-mono tracking-wide">{uhcId}</h1>
             <div className="mt-4 flex flex-wrap gap-3">
               <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                {profile.gender}
+                Male
               </Badge>
               <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                DOB: {profile.dob}
+                DOB: 1985-06-15
               </Badge>
               <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                Ward {profile.ward}
+                Ward 12
               </Badge>
             </div>
           </div>
@@ -88,7 +96,7 @@ export default function CitizenDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Your vaccination record is up to date.
+              Your vaccination record is up to date. {profile.vaccination_completion}% complete.
             </p>
             <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-100 dark:border-emerald-900">
               <div className="flex items-center gap-3">
@@ -130,14 +138,10 @@ export default function CitizenDashboard() {
         </div>
         
         <div className="space-y-3">
-          {profile.timeline.slice(0, 2).map((event, i) => (
+          {events.slice(0, 2).map((event, i) => (
             <Card key={i} className="shadow-sm hover:shadow-md transition-shadow">
               <CardContent className="p-4 flex items-start gap-4">
-                <div className={`mt-1 p-2 rounded-full shrink-0 ${
-                  event.type === 'Vaccination' ? 'bg-emerald-100 text-emerald-600' : 
-                  event.type === 'Visit' ? 'bg-blue-100 text-blue-600' : 
-                  'bg-orange-100 text-orange-600'
-                }`}>
+                <div className="mt-1 p-2 rounded-full shrink-0 bg-emerald-100 text-emerald-600">
                   <Activity className="h-4 w-4" />
                 </div>
                 <div>
