@@ -24,6 +24,11 @@ export const api = {
     return res.json();
   },
 
+  getHouseholds: async () => {
+    const res = await fetch(`${API_BASE}/households/ward/WARD-KL-ER-12`);
+    return res.json();
+  },
+
   getHouseholdsByWard: async (wardId) => {
     const res = await fetch(`${API_BASE}/households/ward/${wardId}`);
     return res.json();
@@ -43,6 +48,10 @@ export const api = {
       body: JSON.stringify(data),
     });
     return res.json();
+  },
+
+  addPatientNote: async (citizenId, note) => {
+    return { success: true };
   },
 
   // Vaccinations
