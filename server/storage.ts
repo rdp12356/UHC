@@ -17,6 +17,7 @@ export interface IStorage {
 
   // ASHA Workers
   getAshaWorker(ashaId: string): Promise<AshaWorker | undefined>;
+  getAshaWorkerByEmail(email: string): Promise<AshaWorker | undefined>;
   getAshaWorkersByWard(wardId: string): Promise<AshaWorker[]>;
   getAllAshaWorkers(): Promise<AshaWorker[]>;
   createAshaWorker(asha: any): Promise<AshaWorker>;
@@ -87,6 +88,11 @@ export class DrizzleStorage implements IStorage {
 
   async getAshaWorkersByWard(wardId: string): Promise<AshaWorker[]> {
     return await db.select().from(asha_workers).where(eq(asha_workers.ward_id, wardId));
+  }
+
+  async getAshaWorkerByEmail(email: string): Promise<AshaWorker | undefined> {
+    const result = await db.select().from(asha_workers).where(eq(asha_workers.email, email));
+    return result[0];
   }
 
   async getAllAshaWorkers(): Promise<AshaWorker[]> {

@@ -15,6 +15,29 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Email required" });
       }
 
+      const validRoles = ['citizen', 'doctor', 'asha', 'gov'];
+      if (role && !validRoles.includes(role)) {
+        return res.status(400).json({ error: "Invalid role specified" });
+      }
+
+      if (role === 'gov') {
+        const govDomains = ['@gov.in', '@nic.in', '@kerala.gov.in'];
+        const isGovEmail = govDomains.some(domain => email.toLowerCase().endsWith(domain));
+        if (!isGovEmail) {
+          return res.status(403).json({ error: "Government role requires official government email domain" });
+        }
+      }
+
+      if (role === 'asha') {
+        if (!ward_id) {
+          return res.status(400).json({ error: "Ward selection required for ASHA worker login" });
+        }
+        const ashaWorker = await storage.getAshaWorkerByEmail(email);
+        if (!ashaWorker) {
+          return res.status(403).json({ error: "Not registered as an ASHA worker. Contact administrator." });
+        }
+      }
+
       let user = await storage.getUserByEmail(email);
       if (!user) {
         user = await storage.createUser({

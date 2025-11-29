@@ -27,6 +27,7 @@ export const asha_workers = pgTable("asha_workers", {
   ward_id: varchar("ward_id").notNull().references(() => wards.ward_id),
   name: text("name").notNull(),
   phone: text("phone").notNull(),
+  email: text("email"),
 });
 
 export const households = pgTable("households", {
