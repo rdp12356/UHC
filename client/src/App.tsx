@@ -22,6 +22,7 @@ import AddNotes from "@/pages/Doctor/AddNotes";
 
 // ASHA Pages
 import HouseholdUpdates from "@/pages/Asha/HouseholdUpdates";
+import WardMembers from "@/pages/Asha/WardMembers";
 import SubmitForm from "@/pages/Asha/SubmitForm";
 import CsvUpload from "@/pages/Asha/CsvUpload";
 
@@ -60,6 +61,9 @@ function Router() {
         {/* ASHA Routes */}
         <Route path="/asha/households">
           <ProtectedRoute component={HouseholdUpdates} allowedRoles={['asha']} />
+        </Route>
+        <Route path="/asha/members">
+          <ProtectedRoute component={WardMembers} allowedRoles={['asha']} />
         </Route>
         <Route path="/asha/submit">
           <ProtectedRoute component={SubmitForm} allowedRoles={['asha']} />

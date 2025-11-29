@@ -34,6 +34,11 @@ export const api = {
     return res.json();
   },
 
+  getMembersByWard: async (wardId) => {
+    const res = await fetch(`${API_BASE}/members/ward/${wardId}`);
+    return res.json();
+  },
+
   // Search
   searchPatient: async (query) => {
     const res = await fetch(`${API_BASE}/search/patients?q=${encodeURIComponent(query)}`);

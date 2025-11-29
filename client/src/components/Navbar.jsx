@@ -40,6 +40,7 @@ export default function Navbar() {
       case 'asha':
         return [
           { label: 'Households', path: '/asha/households', icon: Users },
+          { label: 'Ward Members', path: '/asha/members', icon: Users },
           { label: 'Submit Form', path: '/asha/submit', icon: ClipboardList },
           { label: 'CSV Upload', path: '/asha/upload', icon: Upload },
         ];

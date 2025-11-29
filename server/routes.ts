@@ -106,6 +106,17 @@ export async function registerRoutes(
     }
   });
 
+  // Members in Ward
+  app.get("/api/members/ward/:wardId", async (req, res) => {
+    try {
+      const members = await storage.getMembersByWard(req.params.wardId);
+      res.json(members || []);
+    } catch (error) {
+      console.error("Ward members fetch error:", error);
+      res.json([]);
+    }
+  });
+
   // Search patients
   app.get("/api/search/patients", async (req, res) => {
     try {

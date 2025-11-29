@@ -1,7 +1,7 @@
 import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination } from "@shared/schema";
 import { db } from "./db";
 import { users, wards, asha_workers, households, members, vaccinations } from "@shared/schema";
-import { eq, like } from "drizzle-orm";
+import { eq, like, inArray } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -28,6 +28,7 @@ export interface IStorage {
   // Members
   getMember(memberId: string): Promise<Member | undefined>;
   getMembersByHousehold(householdId: string): Promise<Member[]>;
+  getMembersByWard(wardId: string): Promise<Member[]>;
   createMember(member: any): Promise<Member>;
 
   // Vaccinations
@@ -109,6 +110,14 @@ export class DrizzleStorage implements IStorage {
 
   async getMembersByHousehold(householdId: string): Promise<Member[]> {
     return await db.select().from(members).where(eq(members.household_id, householdId));
+  }
+
+  async getMembersByWard(wardId: string): Promise<Member[]> {
+    const wardHouseholds = await db.select().from(households).where(eq(households.ward_id, wardId));
+    const householdIds = wardHouseholds.map(h => h.household_id);
+    if (householdIds.length === 0) return [];
+    
+    return await db.select().from(members).where(inArray(members.household_id, householdIds));
   }
 
   async createMember(member: any): Promise<Member> {
