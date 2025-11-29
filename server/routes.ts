@@ -27,10 +27,6 @@ export async function registerRoutes(
         if (!ward_id) {
           return res.status(400).json({ error: "Ward selection required for ASHA worker login" });
         }
-        const ashaWorker = await storage.getAshaWorkerByEmail(email);
-        if (!ashaWorker) {
-          return res.status(403).json({ error: "Not registered as an ASHA worker. Contact administrator." });
-        }
       }
 
       let user = await storage.getUserByEmail(email);
