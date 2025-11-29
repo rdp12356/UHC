@@ -234,6 +234,28 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/members", async (req, res) => {
+    try {
+      const { household_id, name, age, relation } = req.body;
+      
+      if (!household_id || !name || age === undefined || !relation) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const member = await storage.createMember({
+        household_id,
+        name,
+        age: parseInt(age),
+        relation
+      });
+
+      res.json(member);
+    } catch (error) {
+      console.error("Member creation error:", error);
+      res.status(500).json({ error: "Failed to create member" });
+    }
+  });
+
   // Vaccinations endpoint
   app.post("/api/vaccinations/member/:memberId/add", async (req, res) => {
     try {

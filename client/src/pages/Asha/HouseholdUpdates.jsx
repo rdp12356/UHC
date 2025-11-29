@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, MapPin, Users, Edit } from "lucide-react";
+import { Search, MapPin, Users, Edit, UserPlus } from "lucide-react";
 import { Link } from "wouter";
 
 export default function HouseholdUpdates() {
@@ -82,11 +82,18 @@ export default function HouseholdUpdates() {
                   </TableCell>
                   <TableCell>Today</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/asha/edit/${h.household_id}`}>
-                      <Button variant="ghost" size="sm" data-testid={`button-edit-${h.household_id}`}>
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <div className="flex justify-end gap-2">
+                      <Link href={`/asha/add-member/${h.household_id}`}>
+                        <Button variant="ghost" size="sm" data-testid={`button-add-member-${h.household_id}`} title="Add Member">
+                          <UserPlus className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Link href={`/asha/edit/${h.household_id}`}>
+                        <Button variant="ghost" size="sm" data-testid={`button-edit-${h.household_id}`} title="Edit Household">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

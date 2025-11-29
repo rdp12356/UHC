@@ -24,6 +24,7 @@ import AddNotes from "@/pages/Doctor/AddNotes";
 import HouseholdUpdates from "@/pages/Asha/HouseholdUpdates";
 import WardMembers from "@/pages/Asha/WardMembers";
 import EditHousehold from "@/pages/Asha/EditHousehold";
+import AddMember from "@/pages/Asha/AddMember";
 import SubmitForm from "@/pages/Asha/SubmitForm";
 import CsvUpload from "@/pages/Asha/CsvUpload";
 
@@ -69,6 +70,9 @@ function Router() {
         </Route>
         <Route path="/asha/edit/:id">
           <ProtectedRoute component={EditHousehold} allowedRoles={['asha']} />
+        </Route>
+        <Route path="/asha/add-member/:id">
+          <ProtectedRoute component={AddMember} allowedRoles={['asha']} />
         </Route>
         <Route path="/asha/submit">
           <ProtectedRoute component={SubmitForm} allowedRoles={['asha']} />
