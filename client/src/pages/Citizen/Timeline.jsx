@@ -14,14 +14,16 @@ export default function CitizenTimeline() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await api.getCitizenProfile('HH-12-0001');
+        const householdId = user?.household_id || 'HH-12-0001';
+        const data = await api.getCitizenProfile(householdId);
         if (data?.members) {
           const events = data.members.flatMap(m =>
             (m.vaccinations || []).map(v => ({
               date: v.vaccination_date,
               type: 'Vaccination',
               title: v.vaccine_name,
-              details: `for ${m.name}`
+              details: `for ${m.name}`,
+              memberId: m.id
             }))
           ).sort((a, b) => new Date(b.date) - new Date(a.date));
           setTimeline(events);
@@ -35,7 +37,7 @@ export default function CitizenTimeline() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user?.household_id]);
 
   const getIcon = (type) => {
     switch (type) {
@@ -70,7 +72,7 @@ export default function CitizenTimeline() {
 
       <div className="relative border-l-2 border-muted ml-3 space-y-8 pb-8">
         {timeline.map((event, index) => (
-          <div key={index} className="relative pl-8 group">
+          <div key={`${event.memberId}-${index}`} className="relative pl-8 group" data-testid={`timeline-event-${index}`}>
             <div className={`absolute -left-[9px] top-0 h-4 w-4 rounded-full border-2 border-white dark:border-slate-950 ${getColor(event.type)} ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-950 ring-${getColor(event.type).replace('bg-', '')}/20`} />
             
             <Card className="shadow-sm hover:shadow-md transition-all group-hover:-translate-y-1 duration-300">
@@ -78,15 +80,15 @@ export default function CitizenTimeline() {
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
                     <Badge variant="secondary" className="mb-2">{event.type}</Badge>
-                    <CardTitle className="text-lg">{event.title}</CardTitle>
+                    <CardTitle className="text-lg" data-testid={`timeline-vaccine-${index}`}>{event.title}</CardTitle>
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground bg-muted px-2 py-1 rounded">
-                    {event.date}
+                  <span className="text-sm font-medium text-muted-foreground bg-muted px-2 py-1 rounded" data-testid={`timeline-date-${index}`}>
+                    {new Date(event.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </span>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{event.details}</p>
+                <p className="text-muted-foreground" data-testid={`timeline-details-${index}`}>{event.details}</p>
               </CardContent>
             </Card>
           </div>
