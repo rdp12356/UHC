@@ -10,7 +10,7 @@ export async function registerRoutes(
   // Auth endpoints
   app.post("/api/auth/login", async (req, res) => {
     try {
-      const { email, role } = req.body;
+      const { email, role, ward_id, household_id } = req.body;
       if (!email) {
         return res.status(400).json({ error: "Email required" });
       }
@@ -21,11 +21,16 @@ export async function registerRoutes(
           email,
           role: role || "citizen",
           full_name: email.split("@")[0],
+          ward_id: ward_id || null,
+          household_id: household_id || (role === 'citizen' ? 'HH-12-0001' : null),
         });
+      } else if (ward_id || household_id) {
+        user = await storage.updateUser(user.id, { ward_id, household_id });
       }
 
       res.json(user);
     } catch (error) {
+      console.error("Login error:", error);
       res.status(500).json({ error: "Login failed" });
     }
   });
@@ -37,6 +42,46 @@ export async function registerRoutes(
       res.json(user);
     } catch (error) {
       res.status(500).json({ error: "Failed to get user" });
+    }
+  });
+
+  // ASHA Workers endpoints
+  app.get("/api/asha-workers", async (req, res) => {
+    try {
+      const workers = await storage.getAllAshaWorkers();
+      res.json(workers || []);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get ASHA workers" });
+    }
+  });
+
+  app.post("/api/asha-workers", async (req, res) => {
+    try {
+      const { name, phone, ward_id } = req.body;
+      const asha_id = `ASHA-${Date.now()}`;
+      const worker = await storage.createAshaWorker({ asha_id, name, phone, ward_id });
+      res.json(worker);
+    } catch (error) {
+      console.error("Create ASHA error:", error);
+      res.status(500).json({ error: "Failed to create ASHA worker" });
+    }
+  });
+
+  app.put("/api/asha-workers/:ashaId", async (req, res) => {
+    try {
+      const worker = await storage.updateAshaWorker(req.params.ashaId, req.body);
+      res.json(worker);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update ASHA worker" });
+    }
+  });
+
+  app.delete("/api/asha-workers/:ashaId", async (req, res) => {
+    try {
+      await storage.deleteAshaWorker(req.params.ashaId);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete ASHA worker" });
     }
   });
 
@@ -61,6 +106,25 @@ export async function registerRoutes(
   });
 
   // Household endpoints
+  app.get("/api/households/all", async (req, res) => {
+    try {
+      const allHouseholds = await storage.getAllHouseholds();
+      res.json(allHouseholds || []);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get all households" });
+    }
+  });
+
+  app.post("/api/households", async (req, res) => {
+    try {
+      const household = await storage.createHousehold(req.body);
+      res.json(household);
+    } catch (error) {
+      console.error("Create household error:", error);
+      res.status(500).json({ error: "Failed to create household" });
+    }
+  });
+
   app.get("/api/households/ward/:wardId", async (req, res) => {
     try {
       const households = await storage.getHouseholdsByWard(req.params.wardId);

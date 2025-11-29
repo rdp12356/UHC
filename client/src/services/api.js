@@ -85,6 +85,59 @@ export const api = {
     return schemes.filter(s => s.eligibility === 'All');
   },
 
+  // ASHA Workers management
+  getAshaWorkers: async () => {
+    const res = await fetch(`${API_BASE}/asha-workers`);
+    return res.json();
+  },
+
+  createAshaWorker: async (data) => {
+    const res = await fetch(`${API_BASE}/asha-workers`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  updateAshaWorker: async (ashaId, data) => {
+    const res = await fetch(`${API_BASE}/asha-workers/${ashaId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  deleteAshaWorker: async (ashaId) => {
+    const res = await fetch(`${API_BASE}/asha-workers/${ashaId}`, {
+      method: "DELETE",
+    });
+    return res.json();
+  },
+
+  // Wards
+  getWards: async () => {
+    const res = await fetch(`${API_BASE}/wards`);
+    return res.json();
+  },
+
+  // All households (for admin)
+  getAllHouseholds: async () => {
+    const res = await fetch(`${API_BASE}/households/all`);
+    return res.json();
+  },
+
+  // Create new household
+  createHousehold: async (data) => {
+    const res = await fetch(`${API_BASE}/households`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
   // Mock: Dashboard stats
   getDashboardStats: async () => {
     return {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,12 +9,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Users } from "lucide-react";
 
 export default function WardMembers() {
+  const { user } = useAuth();
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    api.getMembersByWard("WARD-KL-ER-12").then(data => setMembers(data || [])).catch(() => setMembers([]));
-  }, []);
+    const wardId = user?.ward_id || "WARD-KL-ER-12";
+    api.getMembersByWard(wardId).then(data => setMembers(data || [])).catch(() => setMembers([]));
+  }, [user?.ward_id]);
 
   const filtered = (members || []).filter(m => {
     if (!m) return false;

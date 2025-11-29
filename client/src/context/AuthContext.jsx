@@ -32,13 +32,13 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async (email, role) => {
+  const login = async (email, role, wardId = null, householdId = null) => {
     setLoading(true);
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, role }),
+        body: JSON.stringify({ email, role, ward_id: wardId, household_id: householdId }),
       });
       
       if (!response.ok) {

@@ -4,7 +4,8 @@ import { api } from "@/services/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, QrCode, Activity, ChevronRight, ShieldCheck } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Calendar, QrCode, Activity, ChevronRight, ShieldCheck, Home, Users, Droplets, Syringe } from "lucide-react";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -17,16 +18,9 @@ export default function CitizenDashboard() {
     const fetchProfile = async () => {
       if (user?.id) {
         try {
-          const data = await api.getCitizenProfile('HH-12-0001');
-          setProfile(data || {
-            uhc_id: 'UHC-2025-8891',
-            name: user.full_name,
-            dob: '1985-06-15',
-            gender: 'Male',
-            ward: '12',
-            timeline: [],
-            members: []
-          });
+          const householdId = user.household_id || 'HH-12-0001';
+          const data = await api.getCitizenProfile(householdId);
+          setProfile(data || null);
         } catch (err) {
           console.error('Failed to fetch profile:', err);
         }
@@ -43,10 +37,16 @@ export default function CitizenDashboard() {
     </div>;
   }
 
-  if (!profile) return <div>Profile not found.</div>;
+  if (!profile) return <div className="text-center py-12 text-muted-foreground">Profile not found. Please contact your ASHA worker.</div>;
 
-  const uhcId = `UHC-2025-8891`;
-  const events = (profile.members || []).flatMap(m => 
+  const uhcId = profile.uhc_id || `UHC-${profile.household_id}`;
+  const vaccinationRate = profile.vaccination_completion || 100;
+  const cleanlinessScore = profile.cleanliness_score || 80;
+  const familyHead = profile.family_head || "N/A";
+  const familyName = profile.family_name || "N/A";
+  const members = profile.members || [];
+  
+  const events = members.flatMap(m => 
     (m.vaccinations || []).map(v => ({
       date: v.vaccination_date,
       type: 'Vaccination',
@@ -57,7 +57,6 @@ export default function CitizenDashboard() {
   
   return (
     <div className="space-y-6">
-      {/* ID Card Section */}
       <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
         <div className="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
           <QrCode className="h-64 w-64" />
@@ -66,16 +65,14 @@ export default function CitizenDashboard() {
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h2 className="text-blue-100 font-medium text-sm uppercase tracking-wider mb-1">Unique Health Code</h2>
-            <h1 className="text-3xl md:text-4xl font-bold font-mono tracking-wide">{uhcId}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold font-mono tracking-wide" data-testid="text-uhc-id">{uhcId}</h1>
+            <p className="mt-2 text-blue-100" data-testid="text-family-name">{familyName}</p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                Male
+                <Home className="h-3 w-3 mr-1" /> {familyHead}
               </Badge>
               <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                DOB: 1985-06-15
-              </Badge>
-              <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
-                Ward 12
+                <Users className="h-3 w-3 mr-1" /> {members.length} Members
               </Badge>
             </div>
           </div>
@@ -86,24 +83,28 @@ export default function CitizenDashboard() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Quick Stats / Next Actions */}
         <Card className="border-l-4 border-l-emerald-500 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-500" />
+              <Syringe className="h-5 w-5 text-emerald-500" />
               Vaccination Status
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Your vaccination record is up to date. {profile.vaccination_completion}% complete.
-            </p>
-            <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-100 dark:border-emerald-900">
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="font-medium text-emerald-700 dark:text-emerald-400">Fully Vaccinated</span>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Completion Rate</span>
+                <span className="font-bold text-emerald-600" data-testid="text-vaccination-rate">{vaccinationRate}%</span>
               </div>
-              <span className="text-xs text-muted-foreground">Last: 10 Nov 2024</span>
+              <Progress value={vaccinationRate} className="h-2" />
+              <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-100 dark:border-emerald-900">
+                <div className="flex items-center gap-3">
+                  <div className={`h-2 w-2 ${vaccinationRate >= 80 ? 'bg-emerald-500' : 'bg-amber-500'} rounded-full animate-pulse`} />
+                  <span className={`font-medium ${vaccinationRate >= 80 ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-400'}`}>
+                    {vaccinationRate >= 100 ? 'Fully Vaccinated' : vaccinationRate >= 80 ? 'Up to Date' : 'Pending Vaccinations'}
+                  </span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -111,25 +112,74 @@ export default function CitizenDashboard() {
         <Card className="border-l-4 border-l-blue-500 shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-blue-500" />
-              Upcoming Appointments
+              <Droplets className="h-5 w-5 text-blue-500" />
+              Cleanliness Score
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-6 text-muted-foreground">
-              <p>No upcoming appointments scheduled.</p>
-              <Button variant="link" className="mt-2 h-auto p-0 text-primary">
-                Schedule Checkup
-              </Button>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Current Score</span>
+                <span className="font-bold text-blue-600" data-testid="text-cleanliness-score">{cleanlinessScore}/100</span>
+              </div>
+              <Progress value={cleanlinessScore} className="h-2" />
+              <div className={`flex items-center justify-between p-3 rounded-lg border ${cleanlinessScore >= 80 ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900' : 'bg-amber-50 dark:bg-amber-950/30 border-amber-100 dark:border-amber-900'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`h-2 w-2 ${cleanlinessScore >= 80 ? 'bg-blue-500' : 'bg-amber-500'} rounded-full`} />
+                  <span className={`font-medium ${cleanlinessScore >= 80 ? 'text-blue-700 dark:text-blue-400' : 'text-amber-700 dark:text-amber-400'}`}>
+                    {cleanlinessScore >= 80 ? 'Good' : 'Needs Improvement'}
+                  </span>
+                </div>
+                <span className="text-xs text-muted-foreground">Last Visit: {profile.last_visit || 'Today'}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Activity Preview */}
+      <Card className="shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            Family Members
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {members.length === 0 ? (
+            <p className="text-center text-muted-foreground py-4">No members registered</p>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {members.map((member) => (
+                <div key={member.id} className="border rounded-lg p-4 space-y-2" data-testid={`member-card-${member.id}`}>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-medium" data-testid={`text-member-name-${member.id}`}>{member.name}</h4>
+                      <p className="text-sm text-muted-foreground">Age: {member.age} | {member.relation}</p>
+                    </div>
+                    <Badge variant={member.vaccinations?.length > 0 ? "default" : "outline"} className={member.vaccinations?.length > 0 ? "bg-emerald-500" : ""}>
+                      {member.vaccinations?.length || 0} vaccines
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {member.vaccinations?.slice(0, 3).map((v) => (
+                      <span key={v.id} className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs">
+                        {v.vaccine_name}
+                      </span>
+                    ))}
+                    {member.vaccinations?.length > 3 && (
+                      <span className="px-2 py-0.5 text-xs text-muted-foreground">+{member.vaccinations.length - 3} more</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-serif font-bold">Recent Activity</h3>
+          <h3 className="text-lg font-serif font-bold">Recent Vaccination Activity</h3>
           <Link href="/citizen/timeline">
             <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
               View All <ChevronRight className="h-4 w-4 ml-1" />
@@ -138,20 +188,24 @@ export default function CitizenDashboard() {
         </div>
         
         <div className="space-y-3">
-          {events.slice(0, 2).map((event, i) => (
-            <Card key={i} className="shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-4 flex items-start gap-4">
-                <div className="mt-1 p-2 rounded-full shrink-0 bg-emerald-100 text-emerald-600">
-                  <Activity className="h-4 w-4" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-base">{event.title}</h4>
-                  <p className="text-sm text-muted-foreground">{event.details}</p>
-                  <span className="text-xs text-muted-foreground mt-1 block">{event.date}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {events.length === 0 ? (
+            <p className="text-center text-muted-foreground py-6">No vaccination records yet</p>
+          ) : (
+            events.slice(0, 3).map((event, i) => (
+              <Card key={i} className="shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="p-4 flex items-start gap-4">
+                  <div className="mt-1 p-2 rounded-full shrink-0 bg-emerald-100 text-emerald-600">
+                    <Syringe className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-base">{event.title}</h4>
+                    <p className="text-sm text-muted-foreground">{event.details}</p>
+                    <span className="text-xs text-muted-foreground mt-1 block">{event.date}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>

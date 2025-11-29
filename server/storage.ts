@@ -8,6 +8,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, data: any): Promise<User>;
 
   // Wards
   getWard(wardId: string): Promise<Ward | undefined>;
@@ -17,11 +18,15 @@ export interface IStorage {
   // ASHA Workers
   getAshaWorker(ashaId: string): Promise<AshaWorker | undefined>;
   getAshaWorkersByWard(wardId: string): Promise<AshaWorker[]>;
+  getAllAshaWorkers(): Promise<AshaWorker[]>;
   createAshaWorker(asha: any): Promise<AshaWorker>;
+  updateAshaWorker(ashaId: string, data: any): Promise<AshaWorker>;
+  deleteAshaWorker(ashaId: string): Promise<void>;
 
   // Households
   getHousehold(householdId: string): Promise<Household | undefined>;
   getHouseholdsByWard(wardId: string): Promise<Household[]>;
+  getAllHouseholds(): Promise<Household[]>;
   createHousehold(household: any): Promise<Household>;
   updateHousehold(householdId: string, data: any): Promise<Household>;
 
@@ -56,6 +61,11 @@ export class DrizzleStorage implements IStorage {
     return result[0];
   }
 
+  async updateUser(id: string, data: any): Promise<User> {
+    const result = await db.update(users).set(data).where(eq(users.id, id)).returning();
+    return result[0];
+  }
+
   async getWard(wardId: string): Promise<Ward | undefined> {
     const result = await db.select().from(wards).where(eq(wards.ward_id, wardId));
     return result[0];
@@ -79,9 +89,22 @@ export class DrizzleStorage implements IStorage {
     return await db.select().from(asha_workers).where(eq(asha_workers.ward_id, wardId));
   }
 
+  async getAllAshaWorkers(): Promise<AshaWorker[]> {
+    return await db.select().from(asha_workers);
+  }
+
   async createAshaWorker(asha: any): Promise<AshaWorker> {
     const result = await db.insert(asha_workers).values(asha).returning();
     return result[0];
+  }
+
+  async updateAshaWorker(ashaId: string, data: any): Promise<AshaWorker> {
+    const result = await db.update(asha_workers).set(data).where(eq(asha_workers.asha_id, ashaId)).returning();
+    return result[0];
+  }
+
+  async deleteAshaWorker(ashaId: string): Promise<void> {
+    await db.delete(asha_workers).where(eq(asha_workers.asha_id, ashaId));
   }
 
   async getHousehold(householdId: string): Promise<Household | undefined> {
@@ -91,6 +114,10 @@ export class DrizzleStorage implements IStorage {
 
   async getHouseholdsByWard(wardId: string): Promise<Household[]> {
     return await db.select().from(households).where(eq(households.ward_id, wardId));
+  }
+
+  async getAllHouseholds(): Promise<Household[]> {
+    return await db.select().from(households);
   }
 
   async createHousehold(household: any): Promise<Household> {

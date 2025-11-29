@@ -48,6 +48,7 @@ export default function Navbar() {
         return [
           { label: 'Dashboard', path: '/gov/dashboard', icon: BarChart3 },
           { label: 'Alerts', path: '/gov/alerts', icon: AlertTriangle },
+          { label: 'Admin Panel', path: '/gov/admin', icon: Users },
         ];
       default:
         return [];

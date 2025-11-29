@@ -8,6 +8,8 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   role: text("role").notNull(),
   full_name: text("full_name").notNull(),
+  ward_id: varchar("ward_id"),
+  household_id: varchar("household_id"),
 });
 
 export const wards = pgTable("wards", {
@@ -34,6 +36,9 @@ export const households = pgTable("households", {
   family_head: text("family_head").notNull(),
   cleanliness_score: integer("cleanliness_score"),
   vaccination_completion: integer("vaccination_completion"),
+  last_visit: date("last_visit"),
+  address: text("address"),
+  uhc_id: varchar("uhc_id").unique(),
 });
 
 export const members = pgTable("members", {

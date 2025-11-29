@@ -23,12 +23,14 @@ import AddNotes from "@/pages/Doctor/AddNotes";
 // ASHA Pages
 import HouseholdUpdates from "@/pages/Asha/HouseholdUpdates";
 import WardMembers from "@/pages/Asha/WardMembers";
+import EditHousehold from "@/pages/Asha/EditHousehold";
 import SubmitForm from "@/pages/Asha/SubmitForm";
 import CsvUpload from "@/pages/Asha/CsvUpload";
 
 // Gov Pages
 import GovernmentDashboard from "@/pages/Government/Dashboard";
 import Alerts from "@/pages/Government/Alerts";
+import AdminPanel from "@/pages/Government/AdminPanel";
 
 function Router() {
   return (
@@ -65,6 +67,9 @@ function Router() {
         <Route path="/asha/members">
           <ProtectedRoute component={WardMembers} allowedRoles={['asha']} />
         </Route>
+        <Route path="/asha/edit/:id">
+          <ProtectedRoute component={EditHousehold} allowedRoles={['asha']} />
+        </Route>
         <Route path="/asha/submit">
           <ProtectedRoute component={SubmitForm} allowedRoles={['asha']} />
         </Route>
@@ -78,6 +83,9 @@ function Router() {
         </Route>
         <Route path="/gov/alerts">
           <ProtectedRoute component={Alerts} allowedRoles={['gov']} />
+        </Route>
+        <Route path="/gov/admin">
+          <ProtectedRoute component={AdminPanel} allowedRoles={['gov']} />
         </Route>
 
         <Route component={NotFound} />

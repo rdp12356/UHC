@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +10,14 @@ import { Search, MapPin, Users, Edit } from "lucide-react";
 import { Link } from "wouter";
 
 export default function HouseholdUpdates() {
+  const { user } = useAuth();
   const [households, setHouseholds] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    api.getHouseholds().then(data => setHouseholds(data || [])).catch(() => setHouseholds([]));
-  }, []);
+    const wardId = user?.ward_id || "WARD-KL-ER-12";
+    api.getHouseholdsByWard(wardId).then(data => setHouseholds(data || [])).catch(() => setHouseholds([]));
+  }, [user?.ward_id]);
 
   const filtered = (households || []).filter(h => {
     if (!h) return false;
@@ -79,8 +82,8 @@ export default function HouseholdUpdates() {
                   </TableCell>
                   <TableCell>Today</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/asha/submit?id=${h.household_id}`}>
-                      <Button variant="ghost" size="sm">
+                    <Link href={`/asha/edit/${h.household_id}`}>
+                      <Button variant="ghost" size="sm" data-testid={`button-edit-${h.household_id}`}>
                         <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
