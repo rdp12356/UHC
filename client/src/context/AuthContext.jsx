@@ -59,10 +59,8 @@ export function AuthProvider({ children }) {
         description: `Logged in as ${user.role.toUpperCase()}`,
       });
       
-      if (user.role === 'citizen') setLocation('/citizen/dashboard');
-      else if (user.role === 'doctor') setLocation('/doctor/dashboard');
-      else if (user.role === 'asha') setLocation('/asha/households');
-      else if (user.role === 'gov') setLocation('/gov/dashboard');
+      // Redirect to unified portal home for all roles
+      setLocation('/portals');
       
       setLoading(false);
       return true;

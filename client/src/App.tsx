@@ -41,6 +41,7 @@ import Categories from "@/pages/Categories";
 import HowItWorks from "@/pages/HowItWorks";
 import HospitalNetwork from "@/pages/HospitalNetwork";
 import PublicPortal from "@/pages/PublicPortal";
+import PortalHome from "@/pages/PortalHome";
 
 function Router() {
   return (
@@ -52,6 +53,11 @@ function Router() {
         <Route path="/hospitals" component={HospitalNetwork} />
         <Route path="/check-uhc" component={PublicPortal} />
         
+        {/* Portal Home */}
+        <Route path="/portals">
+          <ProtectedRoute component={PortalHome} allowedRoles={['citizen', 'doctor', 'asha', 'gov']} />
+        </Route>
+
         {/* Citizen Routes */}
         <Route path="/citizen/dashboard">
           <ProtectedRoute component={CitizenDashboard} allowedRoles={['citizen']} />
