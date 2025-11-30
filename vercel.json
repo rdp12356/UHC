@@ -1,11 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/public",
-  "framework": "vite",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "framework": "vite"
 }
 
