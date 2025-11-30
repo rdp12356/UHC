@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
       });
       
       if (user.role === 'citizen') setLocation('/citizen/dashboard');
-      else if (user.role === 'doctor') setLocation('/doctor/search');
+      else if (user.role === 'doctor') setLocation('/doctor/dashboard');
       else if (user.role === 'asha') setLocation('/asha/households');
       else if (user.role === 'gov') setLocation('/gov/dashboard');
       
