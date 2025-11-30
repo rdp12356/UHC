@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Building2, MapPin, Phone, Star, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building2, MapPin, Phone, Star, Search, ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function HospitalNetwork() {
-  const [hospitals, setHospitals] = useState([
+  const [, navigate] = useLocation();
+  const [hospitals] = useState([
     {
       hospital_id: "1",
       name: "Government Medical College Hospital",
@@ -66,13 +69,16 @@ export default function HospitalNetwork() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-6xl mx-auto">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="mb-6 gap-2">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
         <div className="mb-8 space-y-4">
           <div className="flex items-center gap-3">
             <Building2 className="h-8 w-8 text-blue-600" />
             <h1 className="text-4xl font-bold text-slate-900 dark:text-white">Hospital Network</h1>
           </div>
           <p className="text-lg text-slate-600 dark:text-slate-400">
-            Network of government and private hospitals providing UHC services
+            Partner hospitals providing comprehensive healthcare services to UHC citizens
           </p>
         </div>
 

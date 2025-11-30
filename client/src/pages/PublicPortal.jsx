@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Syringe, Activity, Droplets, User, Home, QrCode } from "lucide-react";
+import { Syringe, Activity, Droplets, User, Home, QrCode, ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function PublicPortal() {
+  const [, navigate] = useLocation();
   const [uhcId, setUhcId] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [citizenData, setCitizenData] = useState(null);
@@ -40,6 +42,9 @@ export default function PublicPortal() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-green-50 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-4xl mx-auto">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="mb-6 gap-2">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
         <div className="text-center mb-8 space-y-4">
           <div className="flex justify-center mb-4">
             <div className="bg-white dark:bg-slate-800 p-4 rounded-full shadow-lg">

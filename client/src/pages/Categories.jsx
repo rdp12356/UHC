@@ -1,8 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { IndianRupee, Crown, Heart, Shield } from "lucide-react";
+import { IndianRupee, Crown, Heart, Shield, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 export default function Categories() {
+  const [, navigate] = useLocation();
   const categories = [
     {
       id: 1,
@@ -45,10 +48,13 @@ export default function Categories() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-7xl mx-auto">
+        <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="mb-6 gap-2">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
         <div className="text-center mb-12 space-y-4">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white">UHC Categories</h1>
           <p className="text-xl text-slate-600 dark:text-slate-400">
-            Choose the perfect health plan for your family
+            Four categories based on health coverage and family needs
           </p>
         </div>
 
