@@ -5,12 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, QrCode, Activity, ChevronRight, ShieldCheck, Home, Users, Droplets, Syringe } from "lucide-react";
-import { Link } from "wouter";
+import { Calendar, QrCode, Activity, ChevronRight, ShieldCheck, Home, Users, Droplets, Syringe, ArrowLeft, Star } from "lucide-react";
+import { Link, useLocation } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CitizenDashboard() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,6 +58,13 @@ export default function CitizenDashboard() {
   
   return (
     <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <Button variant="ghost" size="icon" onClick={() => navigate("/portals")}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Citizen Dashboard</h1>
+      </div>
+
       <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
         <div className="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
           <QrCode className="h-64 w-64" />

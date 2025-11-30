@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { 
   BarChart, 
   Bar, 
@@ -14,8 +15,11 @@ import {
   Cell
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Users, AlertTriangle, ShieldAlert, ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function GovernmentDashboard() {
+  const [, navigate] = useLocation();
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -39,9 +43,14 @@ export default function GovernmentDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-serif font-bold">National Health Dashboard</h1>
-        <p className="text-muted-foreground">Real-time health metrics and resource monitoring.</p>
+      <div className="flex items-center gap-3 mb-6">
+        <Button variant="ghost" size="icon" onClick={() => navigate("/portals")}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <h1 className="text-3xl font-serif font-bold">National Health Dashboard</h1>
+          <p className="text-muted-foreground">Real-time health metrics and resource monitoring.</p>
+        </div>
       </div>
 
       {/* Key Metrics */}
@@ -139,6 +148,63 @@ export default function GovernmentDashboard() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Management Tools */}
+      <div className="border-t pt-8">
+        <h2 className="text-2xl font-bold mb-6">Government Tools</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card className="hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-blue-500" onClick={() => navigate("/gov/asha-management")}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  ASHA Worker Management
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Suspend or reactivate ASHA workers, monitor performance</p>
+              <Button variant="ghost" className="mt-4 gap-2" data-testid="button-go-asha-mgmt">
+                Manage → 
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-red-500" onClick={() => navigate("/gov/alerts")}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Health Alerts
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">View critical health alerts and emergency cases</p>
+              <Button variant="ghost" className="mt-4 gap-2" data-testid="button-go-alerts">
+                View Alerts →
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-all cursor-pointer border-l-4 border-l-purple-500" onClick={() => navigate("/gov/admin")}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <ShieldAlert className="h-5 w-5" />
+                  Admin Panel
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Configure system settings and ward management</p>
+              <Button variant="ghost" className="mt-4 gap-2" data-testid="button-go-admin">
+                Admin Panel →
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
