@@ -1,6 +1,6 @@
-import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination, type Hospital, type Citizen, type Funding } from "@shared/schema";
+import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination, type Hospital, type Citizen, type Funding, type Appointment, type InsertAppointment } from "@shared/schema";
 import { db } from "./db";
-import { users, wards, asha_workers, households, members, vaccinations, hospitals, citizens, funding } from "@shared/schema";
+import { users, wards, asha_workers, households, members, vaccinations, hospitals, citizens, funding, appointments } from "@shared/schema";
 import { eq, like, inArray } from "drizzle-orm";
 
 export interface IStorage {
@@ -60,6 +60,14 @@ export interface IStorage {
   getAllFunding(): Promise<Funding[]>;
   createFunding(funding: any): Promise<Funding>;
   updateFunding(fundingId: string, data: any): Promise<Funding>;
+
+  // Appointments
+  getAppointment(appointmentId: string): Promise<Appointment | undefined>;
+  getAppointmentsByDoctor(doctorId: string): Promise<Appointment[]>;
+  getAppointmentsByPatient(patientId: string): Promise<Appointment[]>;
+  createAppointment(appointment: InsertAppointment): Promise<Appointment>;
+  updateAppointment(appointmentId: string, data: any): Promise<Appointment>;
+  deleteAppointment(appointmentId: string): Promise<void>;
 
   // Search
   searchPatients(query: string): Promise<(Household & { members: Member[] })[]>;
@@ -274,6 +282,33 @@ export class DrizzleStorage implements IStorage {
   async updateFunding(fundingId: string, data: any): Promise<Funding> {
     const result = await db.update(funding).set(data).where(eq(funding.id, fundingId)).returning();
     return result[0];
+  }
+
+  async getAppointment(appointmentId: string): Promise<Appointment | undefined> {
+    const result = await db.select().from(appointments).where(eq(appointments.id, appointmentId));
+    return result[0];
+  }
+
+  async getAppointmentsByDoctor(doctorId: string): Promise<Appointment[]> {
+    return await db.select().from(appointments).where(eq(appointments.doctor_id, doctorId));
+  }
+
+  async getAppointmentsByPatient(patientId: string): Promise<Appointment[]> {
+    return await db.select().from(appointments).where(eq(appointments.patient_id, patientId));
+  }
+
+  async createAppointment(appointmentData: InsertAppointment): Promise<Appointment> {
+    const result = await db.insert(appointments).values(appointmentData).returning();
+    return result[0];
+  }
+
+  async updateAppointment(appointmentId: string, data: any): Promise<Appointment> {
+    const result = await db.update(appointments).set(data).where(eq(appointments.id, appointmentId)).returning();
+    return result[0];
+  }
+
+  async deleteAppointment(appointmentId: string): Promise<void> {
+    await db.delete(appointments).where(eq(appointments.id, appointmentId));
   }
 }
 

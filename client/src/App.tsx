@@ -20,6 +20,7 @@ import MemberDetail from "@/pages/Citizen/MemberDetail";
 import DoctorSearch from "@/pages/Doctor/Search";
 import PatientRecord from "@/pages/Doctor/PatientRecord";
 import AddNotes from "@/pages/Doctor/AddNotes";
+import DoctorDashboard from "@/pages/Doctor/Dashboard";
 
 // ASHA Pages
 import HouseholdUpdates from "@/pages/Asha/HouseholdUpdates";
@@ -66,6 +67,9 @@ function Router() {
         </Route>
 
         {/* Doctor Routes */}
+        <Route path="/doctor/dashboard">
+          <ProtectedRoute component={DoctorDashboard} allowedRoles={['doctor']} />
+        </Route>
         <Route path="/doctor/search">
           <ProtectedRoute component={DoctorSearch} allowedRoles={['doctor']} />
         </Route>

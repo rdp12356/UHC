@@ -91,6 +91,18 @@ export const funding = pgTable("funding", {
   created_at: date("created_at").default(sql`CURRENT_DATE`),
 });
 
+export const appointments = pgTable("appointments", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  doctor_id: varchar("doctor_id").notNull(),
+  patient_id: varchar("patient_id").notNull(),
+  appointment_date: date("appointment_date").notNull(),
+  appointment_time: text("appointment_time").notNull(),
+  status: text("status").notNull().default("scheduled"), // scheduled, completed, cancelled
+  reason: text("reason"),
+  notes: text("notes"),
+  created_at: date("created_at").default(sql`CURRENT_DATE`),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertWardSchema = createInsertSchema(wards).omit({});
 export const insertAshaSchema = createInsertSchema(asha_workers).omit({});
@@ -100,6 +112,7 @@ export const insertVaccinationSchema = createInsertSchema(vaccinations).omit({ i
 export const insertHospitalSchema = createInsertSchema(hospitals).omit({ hospital_id: true });
 export const insertCitizenSchema = createInsertSchema(citizens).omit({ citizen_id: true });
 export const insertFundingSchema = createInsertSchema(funding).omit({ id: true });
+export const insertAppointmentSchema = createInsertSchema(appointments).omit({ id: true, created_at: true });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -111,3 +124,5 @@ export type Vaccination = typeof vaccinations.$inferSelect;
 export type Hospital = typeof hospitals.$inferSelect;
 export type Citizen = typeof citizens.$inferSelect;
 export type Funding = typeof funding.$inferSelect;
+export type Appointment = typeof appointments.$inferSelect;
+export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;

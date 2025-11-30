@@ -301,5 +301,76 @@ export async function registerRoutes(
     }
   });
 
+  // Appointments endpoints
+  app.get("/api/appointments/doctor/:doctorId", async (req, res) => {
+    try {
+      const appointments = await storage.getAppointmentsByDoctor(req.params.doctorId);
+      res.json(appointments || []);
+    } catch (error) {
+      console.error("Failed to get appointments:", error);
+      res.status(500).json({ error: "Failed to get appointments" });
+    }
+  });
+
+  app.get("/api/appointments/patient/:patientId", async (req, res) => {
+    try {
+      const appointments = await storage.getAppointmentsByPatient(req.params.patientId);
+      res.json(appointments || []);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get appointments" });
+    }
+  });
+
+  app.post("/api/appointments", async (req, res) => {
+    try {
+      const { doctor_id, patient_id, appointment_date, appointment_time, reason, notes } = req.body;
+      
+      if (!doctor_id || !patient_id || !appointment_date || !appointment_time) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const appointment = await storage.createAppointment({
+        doctor_id,
+        patient_id,
+        appointment_date,
+        appointment_time,
+        reason: reason || null,
+        notes: notes || null,
+        status: "scheduled"
+      });
+
+      res.json(appointment);
+    } catch (error) {
+      console.error("Appointment creation error:", error);
+      res.status(500).json({ error: "Failed to create appointment" });
+    }
+  });
+
+  app.patch("/api/appointments/:appointmentId", async (req, res) => {
+    try {
+      const { status, notes } = req.body;
+      
+      const appointment = await storage.updateAppointment(req.params.appointmentId, {
+        status: status || undefined,
+        notes: notes || undefined
+      });
+
+      res.json(appointment);
+    } catch (error) {
+      console.error("Appointment update error:", error);
+      res.status(500).json({ error: "Failed to update appointment" });
+    }
+  });
+
+  app.delete("/api/appointments/:appointmentId", async (req, res) => {
+    try {
+      await storage.deleteAppointment(req.params.appointmentId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Appointment deletion error:", error);
+      res.status(500).json({ error: "Failed to delete appointment" });
+    }
+  });
+
   return httpServer;
 }
