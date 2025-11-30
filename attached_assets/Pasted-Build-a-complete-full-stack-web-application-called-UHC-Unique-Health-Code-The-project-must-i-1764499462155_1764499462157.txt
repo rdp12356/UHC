@@ -1,0 +1,182 @@
+Build a complete full-stack web application called “UHC – Unique Health Code”.
+
+The project must include:
+
+==========================================================
+🌐 FRONTEND REQUIREMENTS
+==========================================================
+
+GENERAL STYLE:
+- Blue + Green theme (government health scheme inspired)
+- Modern, clean UI with rounded cards and professional fonts
+- Icon-based sections, minimal look, animations, responsive layout
+
+PAGES:
+
+1. HOME PAGE
+- UHC hero banner with logo
+- Subtitle: “Digital Health Identity for Every Citizen”
+- CTA: Generate Your UHC
+- Illustration: medical shield + QR code + blue/green cross
+
+2. CATEGORIES PAGE
+Show 4 UHC categories in horizontal cards:
+- ₹10,000 Category
+- ₹25,000 Category
+- ₹30,000+ Category
+- VIP
+Each with unique color accents and icons.
+
+3. HOW IT WORKS PAGE
+Include a custom flowchart (convert into UI blocks):
+DATA of Public → Unique ID (4 categories) → Link to Hospitals → Treatment Record → Recommend for Govt Funding → Funding (% of Budget + % of GST)
+
+4. HOSPITAL NETWORK PAGE
+- List/network of hospitals (gov + private)
+- Hospital cards with ratings & specializations
+
+5. PUBLIC PORTAL PAGE
+- Enter/Check UHC ID
+- View personal vaccination status
+- Household cleanliness score
+- Treatment history
+- Linked ASHA worker
+
+6. ADMIN DASHBOARD
+Sections:
+- Overview Metrics:
+    - Total Citizens
+    - Vaccination % chart
+    - Cleanliness heatmap
+    - ASHA worker activity
+- Ward-Level Dashboard:
+    - Ward cleanliness scores
+    - Vaccination completion rates
+- Households:
+    - Table of all households and scores
+- Members:
+    - Member list with vaccination timeline
+- Funding Portal:
+    - Recommended cases
+    - Govt Budget Allocation %
+    - GST share %
+- Hospitals:
+    - Manage hospitals and treatments
+
+7. CONTACT PAGE
+Clean form + official UHC branding
+
+==========================================================
+🛠 BACKEND REQUIREMENTS
+==========================================================
+
+Enable full CRUD APIs for:
+- citizens
+- households
+- members
+- vaccinations
+- ASHA workers
+- hospitals
+- funding
+- wards
+
+Also include:
+- Authentication (email + OTP)
+- API security with tokens
+- Auto-generate UHC ID on citizen registration
+- Validation for vaccination entries
+- Automatic linking of:
+    - member → household
+    - household → ward
+    - ASHA worker → ward
+
+==========================================================
+🗄 DATABASE STRUCTURE
+==========================================================
+
+Create these tables:
+
+1. citizens
+   - citizen_id (uuid)
+   - uhc_id (text unique)
+   - name
+   - age
+   - gender
+   - address
+   - ward_id
+   - category (10000 / 25000 / 30000 / VIP)
+
+2. households
+   - household_id (text unique)
+   - ward_id
+   - family_name
+   - cleanliness_score
+   - vaccination_completion
+
+3. members
+   - member_id (uuid)
+   - household_id
+   - name
+   - age
+   - relation
+
+4. vaccinations
+   - id (uuid)
+   - member_id
+   - vaccine_name
+   - vaccination_date
+
+5. asha_workers
+   - asha_id (text)
+   - ward_id
+   - name
+   - phone
+
+6. wards
+   - ward_id (text unique)
+   - state
+   - district
+   - ward_number
+   - cleanliness_rate
+   - vaccination_completion_rate
+
+7. hospitals
+   - hospital_id (uuid)
+   - name
+   - address
+   - rating
+
+8. funding
+   - id (uuid)
+   - household_id
+   - recommended_amount
+   - govt_share_percent
+   - gst_share_percent
+   - status
+
+==========================================================
+📊 EXTRA FEATURES
+==========================================================
+
+Enable:
+- Chart widgets (bar, pie, line)
+- Search & filtering
+- Edit forms with validation
+- Dark/Light mode toggle
+- Mobile responsive dashboard
+- Auto health score calculation:
+    cleanliness + vaccination + risk index
+
+==========================================================
+📦 FINAL OUTPUT
+==========================================================
+
+Deliver a complete front-end + backend + database system with:
+- UI pages
+- Admin dashboard
+- API endpoints
+- Database schema
+- Flowchart section
+- Blue + Green government scheme look
+- Fully responsive components
+- Professional-grade UHC branding
