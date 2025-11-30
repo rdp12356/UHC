@@ -58,12 +58,48 @@ export const vaccinations = pgTable("vaccinations", {
   vaccination_date: date("vaccination_date").notNull(),
 });
 
+export const hospitals = pgTable("hospitals", {
+  hospital_id: uuid("hospital_id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  type: text("type").notNull(), // government, private, ngo
+  rating: integer("rating"), // 1-5
+  specializations: text("specializations").array(), // array of specializations
+  phone: text("phone"),
+  email: text("email"),
+});
+
+export const citizens = pgTable("citizens", {
+  citizen_id: uuid("citizen_id").primaryKey().default(sql`gen_random_uuid()`),
+  uhc_id: varchar("uhc_id").unique(),
+  name: text("name").notNull(),
+  age: integer("age"),
+  gender: text("gender"),
+  address: text("address"),
+  ward_id: varchar("ward_id").references(() => wards.ward_id),
+  category: text("category"), // 10000, 25000, 30000, VIP
+});
+
+export const funding = pgTable("funding", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  household_id: varchar("household_id").notNull().references(() => households.household_id),
+  recommended_amount: integer("recommended_amount"),
+  govt_share_percent: integer("govt_share_percent"),
+  gst_share_percent: integer("gst_share_percent"),
+  status: text("status"), // recommended, approved, disbursed
+  created_at: date("created_at").default(sql`CURRENT_DATE`),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertWardSchema = createInsertSchema(wards).omit({});
 export const insertAshaSchema = createInsertSchema(asha_workers).omit({});
 export const insertHouseholdSchema = createInsertSchema(households).omit({});
 export const insertMemberSchema = createInsertSchema(members).omit({ id: true });
 export const insertVaccinationSchema = createInsertSchema(vaccinations).omit({ id: true });
+export const insertHospitalSchema = createInsertSchema(hospitals).omit({ hospital_id: true });
+export const insertCitizenSchema = createInsertSchema(citizens).omit({ citizen_id: true });
+export const insertFundingSchema = createInsertSchema(funding).omit({ id: true });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -72,3 +108,6 @@ export type AshaWorker = typeof asha_workers.$inferSelect;
 export type Household = typeof households.$inferSelect;
 export type Member = typeof members.$inferSelect;
 export type Vaccination = typeof vaccinations.$inferSelect;
+export type Hospital = typeof hospitals.$inferSelect;
+export type Citizen = typeof citizens.$inferSelect;
+export type Funding = typeof funding.$inferSelect;

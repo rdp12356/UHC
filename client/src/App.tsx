@@ -35,11 +35,21 @@ import Alerts from "@/pages/Government/Alerts";
 import AdminPanel from "@/pages/Government/AdminPanel";
 import WardManagement from "@/pages/Government/WardManagement";
 
+// Public Pages
+import Categories from "@/pages/Categories";
+import HowItWorks from "@/pages/HowItWorks";
+import HospitalNetwork from "@/pages/HospitalNetwork";
+import PublicPortal from "@/pages/PublicPortal";
+
 function Router() {
   return (
     <Layout>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/categories" component={Categories} />
+        <Route path="/how-it-works" component={HowItWorks} />
+        <Route path="/hospitals" component={HospitalNetwork} />
+        <Route path="/check-uhc" component={PublicPortal} />
         
         {/* Citizen Routes */}
         <Route path="/citizen/dashboard">

@@ -1,6 +1,6 @@
-import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination } from "@shared/schema";
+import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination, type Hospital, type Citizen, type Funding } from "@shared/schema";
 import { db } from "./db";
-import { users, wards, asha_workers, households, members, vaccinations } from "@shared/schema";
+import { users, wards, asha_workers, households, members, vaccinations, hospitals, citizens, funding } from "@shared/schema";
 import { eq, like, inArray } from "drizzle-orm";
 
 export interface IStorage {
@@ -41,6 +41,25 @@ export interface IStorage {
   getVaccination(vaccinationId: string): Promise<Vaccination | undefined>;
   getVaccinationsByMember(memberId: string): Promise<Vaccination[]>;
   createVaccination(vaccination: any): Promise<Vaccination>;
+
+  // Hospitals
+  getHospital(hospitalId: string): Promise<Hospital | undefined>;
+  getAllHospitals(): Promise<Hospital[]>;
+  createHospital(hospital: any): Promise<Hospital>;
+  updateHospital(hospitalId: string, data: any): Promise<Hospital>;
+
+  // Citizens
+  getCitizen(citizenId: string): Promise<Citizen | undefined>;
+  getAllCitizens(): Promise<Citizen[]>;
+  createCitizen(citizen: any): Promise<Citizen>;
+  getCitizenByUhcId(uhcId: string): Promise<Citizen | undefined>;
+
+  // Funding
+  getFunding(fundingId: string): Promise<Funding | undefined>;
+  getFundingByHousehold(householdId: string): Promise<Funding | undefined>;
+  getAllFunding(): Promise<Funding[]>;
+  createFunding(funding: any): Promise<Funding>;
+  updateFunding(fundingId: string, data: any): Promise<Funding>;
 
   // Search
   searchPatients(query: string): Promise<(Household & { members: Member[] })[]>;
@@ -193,6 +212,68 @@ export class DrizzleStorage implements IStorage {
       }))
     );
     return results;
+  }
+
+  async getHospital(hospitalId: string): Promise<Hospital | undefined> {
+    const result = await db.select().from(hospitals).where(eq(hospitals.hospital_id, hospitalId));
+    return result[0];
+  }
+
+  async getAllHospitals(): Promise<Hospital[]> {
+    return await db.select().from(hospitals);
+  }
+
+  async createHospital(hospital: any): Promise<Hospital> {
+    const result = await db.insert(hospitals).values(hospital).returning();
+    return result[0];
+  }
+
+  async updateHospital(hospitalId: string, data: any): Promise<Hospital> {
+    const result = await db.update(hospitals).set(data).where(eq(hospitals.hospital_id, hospitalId)).returning();
+    return result[0];
+  }
+
+  async getCitizen(citizenId: string): Promise<Citizen | undefined> {
+    const result = await db.select().from(citizens).where(eq(citizens.citizen_id, citizenId));
+    return result[0];
+  }
+
+  async getAllCitizens(): Promise<Citizen[]> {
+    return await db.select().from(citizens);
+  }
+
+  async createCitizen(citizen: any): Promise<Citizen> {
+    const result = await db.insert(citizens).values(citizen).returning();
+    return result[0];
+  }
+
+  async getCitizenByUhcId(uhcId: string): Promise<Citizen | undefined> {
+    const result = await db.select().from(citizens).where(eq(citizens.uhc_id, uhcId));
+    return result[0];
+  }
+
+  async getFunding(fundingId: string): Promise<Funding | undefined> {
+    const result = await db.select().from(funding).where(eq(funding.id, fundingId));
+    return result[0];
+  }
+
+  async getFundingByHousehold(householdId: string): Promise<Funding | undefined> {
+    const result = await db.select().from(funding).where(eq(funding.household_id, householdId));
+    return result[0];
+  }
+
+  async getAllFunding(): Promise<Funding[]> {
+    return await db.select().from(funding);
+  }
+
+  async createFunding(fundingData: any): Promise<Funding> {
+    const result = await db.insert(funding).values(fundingData).returning();
+    return result[0];
+  }
+
+  async updateFunding(fundingId: string, data: any): Promise<Funding> {
+    const result = await db.update(funding).set(data).where(eq(funding.id, fundingId)).returning();
+    return result[0];
   }
 }
 
