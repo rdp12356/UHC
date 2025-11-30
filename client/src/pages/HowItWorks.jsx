@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, ID, Building2, FileText, Landmark, DollarSign } from "lucide-react";
+import { Users, Barcode, Building2, FileText, Landmark, DollarSign } from "lucide-react";
 
 export default function HowItWorks() {
   const steps = [
@@ -14,7 +14,7 @@ export default function HowItWorks() {
       number: 2,
       title: "Unique ID Generation",
       description: "System assigns UHC ID in 4 categories based on income/health needs",
-      icon: ID,
+      icon: Barcode,
       color: "bg-green-100 dark:bg-green-900"
     },
     {

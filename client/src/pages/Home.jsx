@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Loader2 } from "lucide-react";
+import { Activity, Loader2, ArrowRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLocation } from "wouter";
 
 export default function Home() {
+  const [, navigate] = useLocation();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [role, setRole] = useState("citizen");
@@ -46,22 +48,75 @@ export default function Home() {
     setIsLoading(false);
   };
 
+  const publicLinks = [
+    { label: "View Categories", path: "/categories", icon: "📊" },
+    { label: "How It Works", path: "/how-it-works", icon: "🔄" },
+    { label: "Hospital Network", path: "/hospitals", icon: "🏥" },
+    { label: "Check Your UHC", path: "/check-uhc", icon: "🔍" }
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
-      
-      <div className="mb-8 text-center space-y-2">
-        <div className="inline-flex items-center justify-center p-4 bg-primary rounded-2xl shadow-lg mb-4">
-          <Activity className="h-10 w-10 text-primary-foreground" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+      {/* Header Navigation */}
+      <div className="bg-white dark:bg-slate-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Activity className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <span className="font-bold text-lg text-slate-900 dark:text-white">UHC Portal</span>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {publicLinks.map((link) => (
+              <Button
+                key={link.path}
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(link.path)}
+                className="text-xs md:text-sm"
+              >
+                {link.label}
+              </Button>
+            ))}
+          </div>
         </div>
-        <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-          UHC Portal
-        </h1>
-        <p className="text-muted-foreground text-lg max-w-md mx-auto">
-          Unique Health Code: A unified digital health platform for every citizen.
-        </p>
       </div>
 
-      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+      {/* Hero Section */}
+      <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center p-4">
+        <div className="mb-8 text-center space-y-2 max-w-2xl">
+          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl shadow-lg mb-4">
+            <Activity className="h-10 w-10 text-white" />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-serif font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+            UHC – Unique Health Code
+          </h1>
+          <p className="text-muted-foreground text-xl max-w-md mx-auto">
+            Digital Health Identity for Every Citizen. A comprehensive healthcare platform connecting citizens, doctors, ASHA workers, and government officials.
+          </p>
+        </div>
+
+        {/* Public Features Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-6xl mx-auto">
+        {publicLinks.map((link) => (
+          <Card
+            key={link.path}
+            className="cursor-pointer hover:shadow-lg transition-all hover:border-blue-500 dark:hover:border-blue-400"
+            onClick={() => navigate(link.path)}
+          >
+            <CardHeader className="pb-3">
+              <CardTitle className="text-2xl">{link.icon}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="font-semibold text-slate-900 dark:text-white mb-2">{link.label}</p>
+              <Button variant="ghost" size="sm" className="gap-1 p-0">
+                Learn more <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+        </div>
+      </div>
+
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
           <CardDescription className="text-center">
