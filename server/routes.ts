@@ -372,5 +372,59 @@ export async function registerRoutes(
     }
   });
 
+  // ASHA Reviews & Suspension endpoints
+  app.get("/api/asha/:ashaId/reviews", async (req, res) => {
+    try {
+      const reviews = await storage.getAshaReviews(req.params.ashaId);
+      res.json(reviews || []);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get reviews" });
+    }
+  });
+
+  app.post("/api/asha/:ashaId/reviews", async (req, res) => {
+    try {
+      const { citizen_id, rating, review_text, visit_date } = req.body;
+      if (!citizen_id || !rating) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      const review = await storage.createAshaReview({
+        asha_id: req.params.ashaId,
+        citizen_id,
+        rating: parseInt(rating),
+        review_text: review_text || null,
+        visit_date: visit_date || null
+      });
+      res.json(review);
+    } catch (error) {
+      console.error("Review creation error:", error);
+      res.status(500).json({ error: "Failed to create review" });
+    }
+  });
+
+  app.post("/api/asha/:ashaId/suspend", async (req, res) => {
+    try {
+      const { reason, suspended_by } = req.body;
+      if (!reason || !suspended_by) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      const worker = await storage.suspendAshaWorker(req.params.ashaId, reason, suspended_by);
+      res.json(worker);
+    } catch (error) {
+      console.error("Suspension error:", error);
+      res.status(500).json({ error: "Failed to suspend ASHA worker" });
+    }
+  });
+
+  app.post("/api/asha/:ashaId/reactivate", async (req, res) => {
+    try {
+      const worker = await storage.reactivateAshaWorker(req.params.ashaId);
+      res.json(worker);
+    } catch (error) {
+      console.error("Reactivation error:", error);
+      res.status(500).json({ error: "Failed to reactivate ASHA worker" });
+    }
+  });
+
   return httpServer;
 }

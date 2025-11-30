@@ -1,6 +1,6 @@
-import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination, type Hospital, type Citizen, type Funding, type Appointment, type InsertAppointment } from "@shared/schema";
+import { type User, type InsertUser, type Ward, type AshaWorker, type Household, type Member, type Vaccination, type Hospital, type Citizen, type Funding, type Appointment, type InsertAppointment, type AshaReview, type InsertAshaReview } from "@shared/schema";
 import { db } from "./db";
-import { users, wards, asha_workers, households, members, vaccinations, hospitals, citizens, funding, appointments } from "@shared/schema";
+import { users, wards, asha_workers, households, members, vaccinations, hospitals, citizens, funding, appointments, asha_reviews } from "@shared/schema";
 import { eq, like, inArray } from "drizzle-orm";
 
 export interface IStorage {
@@ -68,6 +68,12 @@ export interface IStorage {
   createAppointment(appointment: InsertAppointment): Promise<Appointment>;
   updateAppointment(appointmentId: string, data: any): Promise<Appointment>;
   deleteAppointment(appointmentId: string): Promise<void>;
+
+  // ASHA Reviews & Suspension
+  getAshaReviews(ashaId: string): Promise<AshaReview[]>;
+  createAshaReview(review: InsertAshaReview): Promise<AshaReview>;
+  suspendAshaWorker(ashaId: string, reason: string, suspendedBy: string): Promise<AshaWorker>;
+  reactivateAshaWorker(ashaId: string): Promise<AshaWorker>;
 
   // Search
   searchPatients(query: string): Promise<(Household & { members: Member[] })[]>;
@@ -309,6 +315,35 @@ export class DrizzleStorage implements IStorage {
 
   async deleteAppointment(appointmentId: string): Promise<void> {
     await db.delete(appointments).where(eq(appointments.id, appointmentId));
+  }
+
+  async getAshaReviews(ashaId: string): Promise<AshaReview[]> {
+    return await db.select().from(asha_reviews).where(eq(asha_reviews.asha_id, ashaId));
+  }
+
+  async createAshaReview(reviewData: InsertAshaReview): Promise<AshaReview> {
+    const result = await db.insert(asha_reviews).values(reviewData).returning();
+    return result[0];
+  }
+
+  async suspendAshaWorker(ashaId: string, reason: string, suspendedBy: string): Promise<AshaWorker> {
+    const result = await db.update(asha_workers).set({
+      status: "suspended",
+      suspension_reason: reason,
+      suspended_by: suspendedBy,
+      suspended_at: new Date().toISOString().split('T')[0]
+    }).where(eq(asha_workers.asha_id, ashaId)).returning();
+    return result[0];
+  }
+
+  async reactivateAshaWorker(ashaId: string): Promise<AshaWorker> {
+    const result = await db.update(asha_workers).set({
+      status: "active",
+      suspension_reason: null,
+      suspended_by: null,
+      suspended_at: null
+    }).where(eq(asha_workers.asha_id, ashaId)).returning();
+    return result[0];
   }
 }
 

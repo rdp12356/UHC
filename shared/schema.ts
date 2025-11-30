@@ -28,6 +28,10 @@ export const asha_workers = pgTable("asha_workers", {
   name: text("name").notNull(),
   phone: text("phone").notNull(),
   email: text("email"),
+  status: text("status").notNull().default("active"), // active, suspended
+  suspension_reason: text("suspension_reason"),
+  suspended_by: varchar("suspended_by"),
+  suspended_at: date("suspended_at"),
 });
 
 export const households = pgTable("households", {
@@ -103,6 +107,16 @@ export const appointments = pgTable("appointments", {
   created_at: date("created_at").default(sql`CURRENT_DATE`),
 });
 
+export const asha_reviews = pgTable("asha_reviews", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  asha_id: varchar("asha_id").notNull().references(() => asha_workers.asha_id),
+  citizen_id: varchar("citizen_id").notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  review_text: text("review_text"),
+  visit_date: date("visit_date"),
+  created_at: date("created_at").default(sql`CURRENT_DATE`),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertWardSchema = createInsertSchema(wards).omit({});
 export const insertAshaSchema = createInsertSchema(asha_workers).omit({});
@@ -113,6 +127,7 @@ export const insertHospitalSchema = createInsertSchema(hospitals).omit({ hospita
 export const insertCitizenSchema = createInsertSchema(citizens).omit({ citizen_id: true });
 export const insertFundingSchema = createInsertSchema(funding).omit({ id: true });
 export const insertAppointmentSchema = createInsertSchema(appointments).omit({ id: true, created_at: true });
+export const insertAshaReviewSchema = createInsertSchema(asha_reviews).omit({ id: true, created_at: true });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -126,3 +141,5 @@ export type Citizen = typeof citizens.$inferSelect;
 export type Funding = typeof funding.$inferSelect;
 export type Appointment = typeof appointments.$inferSelect;
 export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
+export type AshaReview = typeof asha_reviews.$inferSelect;
+export type InsertAshaReview = z.infer<typeof insertAshaReviewSchema>;

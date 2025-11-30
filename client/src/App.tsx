@@ -15,6 +15,7 @@ import CitizenDashboard from "@/pages/Citizen/Dashboard";
 import CitizenTimeline from "@/pages/Citizen/Timeline";
 import CitizenSchemes from "@/pages/Citizen/Schemes";
 import MemberDetail from "@/pages/Citizen/MemberDetail";
+import AshaReview from "@/pages/Citizen/AshaReview";
 
 // Doctor Pages
 import DoctorSearch from "@/pages/Doctor/Search";
@@ -35,6 +36,7 @@ import GovernmentDashboard from "@/pages/Government/Dashboard";
 import Alerts from "@/pages/Government/Alerts";
 import AdminPanel from "@/pages/Government/AdminPanel";
 import WardManagement from "@/pages/Government/WardManagement";
+import AshaManagement from "@/pages/Government/AshaManagement";
 
 // Public Pages
 import Categories from "@/pages/Categories";
@@ -70,6 +72,9 @@ function Router() {
         </Route>
         <Route path="/citizen/member/:memberId">
           <ProtectedRoute component={MemberDetail} allowedRoles={['citizen']} />
+        </Route>
+        <Route path="/citizen/review-asha">
+          <ProtectedRoute component={AshaReview} allowedRoles={['citizen']} />
         </Route>
 
         {/* Doctor Routes */}
@@ -118,6 +123,9 @@ function Router() {
         </Route>
         <Route path="/gov/wards">
           <ProtectedRoute component={WardManagement} allowedRoles={['gov']} />
+        </Route>
+        <Route path="/gov/asha-management">
+          <ProtectedRoute component={AshaManagement} allowedRoles={['gov']} />
         </Route>
 
         <Route component={NotFound} />
